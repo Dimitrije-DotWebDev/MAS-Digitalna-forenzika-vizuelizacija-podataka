@@ -1,0 +1,26 @@
+.main{
+    width: 100vw; 
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+    &-header, &-content{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    &-header{
+        height: 20%;
+
+        filter-bar{
+            width: 100%;
+        }
+    }
+
+    &-content{
+        graph{
+            width: 100%;
+        }
+    }
+}
