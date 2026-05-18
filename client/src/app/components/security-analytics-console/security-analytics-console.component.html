@@ -1,0 +1,166 @@
+<div class="security-analytics-console">
+  <div class="console-header">
+    <div class="title-group-main-row">
+      <span class="matrix-dot"></span>
+      <h3>SECURITY ANALYTICS CONSOLE</h3>
+    </div>
+    <div class="console-navigation-row">
+      <div class="console-nav">
+        <button [class.active]="activeTab === 'metrics'" (click)="setTab('metrics')">DEMOGRAPHICS</button>
+        <button [class.active]="activeTab === 'geo'" (click)="setTab('geo')">GEO TRACKS</button>
+        <button [class.active]="activeTab === 'cognition'" (click)="setTab('cognition')">COGNITION</button>
+        <button [class.active]="activeTab === 'raw'" (click)="setTab('raw')">RAW LOGS</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="console-body">
+    <div class="tab-content metrics-tab" *ngIf="activeTab === 'metrics'">
+      <div class="chart-group">
+        <span class="chart-label">GENDER DISTRIBUTION VECTOR</span>
+        <div class="bar-container">
+          <div class="bar male-bar" [style.width.%]="pctMale"></div>
+          <div class="bar female-bar" [style.width.%]="pctFemale"></div>
+        </div>
+        <div class="chart-legend">
+          <span class="m-color">Male: {{ pctMale }}%</span>
+          <span class="f-color">Female: {{ pctFemale }}%</span>
+        </div>
+      </div>
+
+      <div class="chart-group" style="margin-top: 14px;">
+        <span class="chart-label">TARGET CLUSTER AGE CORE</span>
+        <div class="age-row">
+          <div class="age-item"><span>20-25:</span> <strong>{{ pctAge20_25 }}%</strong></div>
+          <div class="age-item"><span>26-35:</span> <strong>{{ pctAge26_35 }}%</strong></div>
+          <div class="age-item"><span>36-45:</span> <strong>{{ pctAge36_45 }}%</strong></div>
+          <div class="age-item"><span>46+:</span> <strong>{{ pctAge46 }}%</strong></div>
+        </div>
+      </div>
+
+      <hr class="console-divider">
+
+      <div class="chart-group">
+        <span class="chart-label">DOMINANT OPERATIONAL SECTOR</span>
+        <div class="profession-box">
+          <span class="prof-name"># {{ topOccupationName.toUpperCase() }}</span>
+          <span class="prof-pct">{{ topOccupationPct }}% affinity</span>
+        </div>
+        <div class="bar-container single-bar">
+          <div class="bar field-bar" [style.width.%]="topOccupationPct"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content geo-tab" *ngIf="activeTab === 'geo'">
+      <span class="chart-label">TOP ACTIVE GEOGRAPHIC INTERCEPT HUBS</span>
+      <div *ngIf="geoTracks.length > 0; else noGeoTemplate">
+        <div class="geo-track-item" *ngFor="let track of geoTracks" style="margin-bottom: 12px;">
+          <div class="geo-info" style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 4px;">
+            <span style="color: #fff; font-weight: bold;">📍 {{ track.city.toUpperCase() }}</span>
+            <span style="color: #00f2ff; font-weight: bold;">{{ track.pct }}% TRACE</span>
+          </div>
+          <div class="bar-container">
+            <div class="bar geo-bar" [style.width.%]="track.pct"></div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noGeoTemplate>
+        <p style="font-size: 11px; color: #627d98; margin: 0; padding-top: 20px; text-align: center;">
+          [ SIGNAL DARK: NO GEOGRAPHIC TRACKS DETECTED ]
+        </p>
+      </ng-template>
+    </div>
+
+    <div class="tab-content cognition-tab" *ngIf="activeTab === 'cognition'">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="chart-label" style="margin: 0;">COGNITIVE INTELLIGENCE MATRIX</span>
+        <div class="button-action-group" style="display: flex; gap: 6px;">
+          <button class="maximize-btn search-matrix-btn" (click)="triggerTableModal()">
+            📋 REPOSITORY MATRIX
+          </button>
+          <button class="maximize-btn" (click)="toggleChartSize($event)">
+            ⤢ EXPAND MATRIX
+          </button>
+        </div>
+      </div>
+
+      <div class="mini-chart-placeholder" (click)="toggleChartSize($event)" style="background: rgba(0,255,204,0.02); border: 1px dashed rgba(0,255,204,0.2); padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s;">
+        <span style="font-size: 10px; color: #00ffcc; font-weight: bold; letter-spacing: 0.5px;">[ CLICK TO VISUALIZE 3D BUBBLE MATRIX ]</span>
+      </div>
+
+      <span class="chart-label">LLAMA FORENSIC PROFILE SYNTHESIS REPORT</span>
+      <div class="ai-report-wrapper" style="background: rgba(6, 11, 19, 0.4); padding: 10px; border-radius: 4px; border: 1px solid rgba(255, 184, 0, 0.15); height: 110px; overflow-y: auto;">
+        <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #e2e8f0; font-family: monospace;" [class.blur-text]="isRightAiLoading">
+          {{ rightLlamaProfile }}
+        </p>
+      </div>
+    </div>
+
+    <div class="tab-content raw-tab" *ngIf="activeTab === 'raw'">
+      <span class="chart-label">INTERCEPTED TEXT STREAM SNAPSHOT</span>
+      <pre class="raw-log-output">{{ rawInterceptLog || 'No active packets captured in this stream.' }}</pre>
+    </div>
+  </div>
+</div>
+
+<div class="forensic-modal-overlay" *ngIf="isChartMaximized" (click)="toggleChartSize($event)">
+  <div class="modal-mouse-shield" (mousemove)="$event.stopPropagation()" (mouseover)="$event.stopPropagation()"></div>
+  
+  <div class="forensic-modal-window" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="title-group">
+        <span class="matrix-dot-orange"></span>
+        <h3>CRITICAL METRIC ANALYSIS // BUBBLE GRAPH SPECTRUM</h3>
+      </div>
+      <button class="close-modal-btn" (click)="toggleChartSize($event)">✕ CLOSE STREAM</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-chart-section">
+        <div class="modal-chart-header-text">
+          <span class="chart-label">CROSS-ANALYSIS MATRIX (AGE CORE vs. VARYING INDEX)</span>
+        </div>
+        
+        <div class="modal-navigation-row">
+          <div class="console-nav">
+            <button [class.active]="activeChartTab === 'demographics'" (click)="setChartTab('demographics', $event)">DEMOGRAPHICS</button>
+            <button [class.active]="activeChartTab === 'geo'" (click)="setChartTab('geo', $event)">GEO VECTORS</button>
+            <button [class.active]="activeChartTab === 'channels'" (click)="setChartTab('channels', $event)">CHANNELS</button>
+            <button [class.active]="activeChartTab === 'velocity'" (click)="setChartTab('velocity', $event)">ENGAGEMENT VELOCITY</button>
+          </div>
+        </div>
+
+        <div class="full-chart-container">
+          <apx-chart *ngIf="pctMale > 0 && chartOptions && chartOptions.series && activeChartTab"
+            [series]="chartOptions.series!"
+            [chart]="chartOptions.chart!"
+            [xaxis]="chartOptions.xaxis!"
+            [yaxis]="chartOptions.yaxis!"
+            [plotOptions]="chartOptions.plotOptions!"
+            [colors]="chartOptions.colors!"
+            [fill]="chartOptions.fill!"
+            [tooltip]="chartOptions.tooltip!">
+          </apx-chart>
+          
+          <div *ngIf="pctMale === 0" style="font-size: 12px; color:#627d98; text-align:center; padding: 100px 0;">
+            No matrix lines computed. Target cluster dark.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-info-section">
+        <span class="chart-label">LLAMA REAL-TIME SYNTHESIS EXTRACTION</span>
+        <div class="modal-report-box">
+          <p [class.blur-text]="isRightAiLoading">{{ rightLlamaProfile }}</p>
+        </div>
+        
+        <div class="modal-quick-stats">
+          <div class="stat-node"><span>GEO AFFINITY:</span> <strong>{{ geoTracks[0] ? geoTracks[0].city : 'N/A' }} ({{ geoTracks[0] ? geoTracks[0].pct : 0 }}%)</strong></div>
+          <div class="stat-node"><span>CORE FIELD:</span> <strong>{{ topOccupationName }}</strong></div>
+          <div class="stat-node"><span>GENDER TRACK:</span> <strong>{{ pctMale }}% MALE VEC</strong></div>
+        </div>          
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="forensic-modal-overlay table-modal-overlay" *ngIf="isOpen" (click)="closeModal()">
+  <div class="forensic-modal-window table-modal-window" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <div class="title-group">
+        <span class="matrix-dot-cyan"></span>
+        <h3>RAW SIGNAL LOG REPOSITORY // TOTAL MATRIX NODE SUMMARY</h3>
+      </div>
+      <button class="close-modal-btn cyan-btn" (click)="closeModal()">✕ CLOSE TABLE VIEW</button>
+    </div>
+
+    <div class="modal-body table-modal-body">
+      <div class="table-wrapper">
+        <table class="cyber-table">
+          <thead>
+            <tr>
+              <th (click)="sortTable('username')">USERNAME <span class="sort-icon">{{ getSortIcon('username') }}</span></th>
+              <th (click)="sortTable('gender')">GENDER <span class="sort-icon">{{ getSortIcon('gender') }}</span></th>
+              <th (click)="sortTable('age')">AGE <span class="sort-icon">{{ getSortIcon('age') }}</span></th>
+              <th (click)="sortTable('occupation')">OCCUPATION <span class="sort-icon">{{ getSortIcon('occupation') }}</span></th>
+              <th (click)="sortTable('city')">CITY <span class="sort-icon">{{ getSortIcon('city') }}</span></th>
+              <th (click)="sortTable('country')">COUNTRY <span class="sort-icon">{{ getSortIcon('country') }}</span></th>
+              <th (click)="sortTable('messagesCount')">INTERVAL MSGS <span class="sort-icon">{{ getSortIcon('messagesCount') }}</span></th>
+              <th (click)="sortTable('totalPosts')">INTERVAL POSTS <span class="sort-icon">{{ getSortIcon('totalPosts') }}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let friend of localTableData">
+              <td class="username-td">&#64;{{ friend.username }}</td>
+              <td [ngClass]="friend.gender.toLowerCase()">{{ friend.gender }}</td>
+              <td>{{ friend.age }}</td>
+              <td class="gray-text"># {{ friend.occupation }}</td>
+              <td>📍 {{ friend.city }}</td>
+              <td class="gray-text">{{ friend.country }}</td>
+              <td class="num-td text-cyan">{{ friend.messagesCount }}</td>
+              <td class="num-td text-orange">{{ friend.totalPosts }}</td>
+            </tr>
+            <tr *ngIf="localTableData.length === 0">
+              <td colspan="8" class="empty-table-text">[ NO TARGET CHANNELS CAPTURED IN THIS NODE MATRIX ]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="main">
+  <div class="main-header">
+    <filter-bar 
+      [selectedYear]="selectedYear" 
+      [selectedMonth]="selectedMonth"
+      [selectedPeriod]="selectedPeriod"
+      [selectedVisualization]="selectedVisualization"
+      [locationControl]="locationControl"
+      [occupationControl]="occupationControl"
+      [filteredLocationOptions]="filteredLocationOptions"
+      [filteredOccupationOptions]="filteredOccupationOptions"
+      (visualizationOptionChangedEmitter)="visualizationChanged($event)"
+      (periodOptionChangedEmitter)="periodChanged($event)"
+      (yearChangedEmitter)="yearChanged($event)"
+      (monthChangedEmitter)="monthChanged($event)"
+      (genderChangedEmitter)="genderChanged($event)">
+    </filter-bar>
+  </div>
+  
+  <div class="main-content">
+    <app-radar-chart-three 
+      [data]="filteredUserInformation"
+      [selectedYear]="selectedYear"
+      [selectedMonth]="selectedMonth"
+      [selectedPeriod]="selectedPeriod"
+      [selectedVisualization]="selectedVisualization">
+    </app-radar-chart-three>
+  </div>
+
+  <app-forensic-intelligence-card
+    [topic]="aiTopic"
+    [sentiment]="aiSentiment"
+    [summary]="aiSummary"
+    [isLoading]="isAiLoading">
+  </app-forensic-intelligence-card>
+
+  <app-security-analytics-console
+    [pctMale]="pctMale"
+    [pctFemale]="pctFemale"
+    [pctAge20_25]="pctAge20_25"
+    [pctAge26_35]="pctAge26_35"
+    [pctAge36_45]="pctAge36_45"
+    [pctAge46]="pctAge46"
+    [topOccupationName]="topOccupationName"
+    [topOccupationPct]="topOccupationPct"
+    [geoTracks]="geoTracks"
+    [rightLlamaProfile]="rightLlamaProfile"
+    [isRightAiLoading]="isRightAiLoading"
+    [rawInterceptLog]="rawInterceptLog"
+    [chartOptions]="chartOptions"
+    (openTableModalEmitter)="openTableModal()"
+    (activeChartTabChangedEmitter)="chartTabChangedInConsole($event)">
+  </app-security-analytics-console>
+
+  <app-forensic-table-modal 
+    [isOpen]="isTableModalOpen" 
+    [data]="tableData"
+    (closeEmitter)="closeTableModal()">
+  </app-forensic-table-modal>
+</div>

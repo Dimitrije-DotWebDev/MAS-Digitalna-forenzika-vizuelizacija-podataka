@@ -1,0 +1,34 @@
+<div class="forensic-intelligence-card">
+  <div class="card-header">
+    <div class="title-group">
+      <span class="pulse-icon" [class.analysing]="isLoading"></span>
+      <h3>AI FORENSIC COGNITION</h3>
+    </div>
+    <span class="model-badge">Llama 3.2:1B</span>
+  </div>
+
+  <div class="card-body">
+    <div class="metrics-row">
+      <div class="metric-box">
+        <span class="label">INTERCEPT TARGET</span>
+        <span class="value topic-value">{{ topic }}</span>
+      </div>
+      
+      <div class="metric-box">
+        <span class="label">EMOTIONAL VECTOR</span>
+        <span class="value sentiment-value" [ngClass]="sentiment.toLowerCase()">
+          {{ sentiment }}
+        </span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="summary-box">
+      <span class="label">BEHAVIORAL SUMMARY</span>
+      <p class="summary-text" [class.blur-text]="isLoading">
+        {{ summary }}
+      </p>
+    </div>
+  </div>
+</div>

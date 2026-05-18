@@ -1,0 +1,351 @@
+%cyber-scroll {
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.3); }
+  &::-webkit-scrollbar-thumb { border-radius: 4px; }
+}
+
+%cyber-btn-base {
+  background: rgba(0, 0, 0, 0.4);
+  font-family: monospace;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes blink { from { opacity: 0.4; } to { opacity: 1; } }
+
+.security-analytics-console {
+  position: fixed;
+  bottom: 25px;
+  right: 25px; 
+  width: 380px; 
+  
+  // 🚨 ZAKUCAVANJE VISINE: Konzola sada ima striktnih 280px, isto kao i leva AI kartica
+  height: 400px; 
+  
+  background: rgba(10, 15, 24, 0.92);
+  border: 1px solid rgba(255, 184, 0, 0.25); 
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-family: monospace;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  overflow: hidden; // Sprečava da bilo šta "ispadne" van okvira kartice
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+
+  .console-header {
+    background: rgba(255, 184, 0, 0.03);
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255, 184, 0, 0.15);
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;
+    flex-shrink: 0; // Garantuje da se zaglavlje i tabovi nikada neće skupiti
+
+    .title-group-main-row {
+      display: flex;
+      align-items: center;
+      h3 { margin: 0; font-size: 11px; font-weight: bold; color: #ffb800; letter-spacing: 0.5px; }
+    }
+  }
+
+  .matrix-dot { width: 5px; height: 5px; background: #ffb800; border-radius: 50%; display: inline-block; margin-right: 8px; }
+
+  .console-navigation-row {
+    width: 100%;
+    .console-nav {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+      button {
+        @extend %cyber-btn-base;
+        flex: 1;
+        border: 1px solid rgba(255, 184, 0, 0.15);
+        color: #8fa0b5 !important;
+        font-size: 9px;
+        padding: 5px 2px;
+        &:hover { 
+          color: #fff !important; 
+          background: rgba(255, 184, 0, 0.05); 
+          border-color: #ffb800; 
+        }
+        &.active { 
+          color: #ffb800 !important; 
+          background: rgba(255, 184, 0, 0.1); 
+          border-color: #ffb800; 
+          text-shadow: 0 0 6px rgba(255, 184, 0, 0.3); 
+        }
+      }
+    }
+  }
+
+  // 🚨 AUTOMATSKI FORENZIČKI SKROL
+  .console-body {
+    padding: 14px;
+    flex-grow: 1;
+    
+    // Ključno pravilo: Kada podaci u bilo kom tabu prerastu prostor, pali se skrol bar
+    overflow-y: auto; 
+    
+    @extend %cyber-scroll;
+    &::-webkit-scrollbar-thumb { background: rgba(255, 184, 0, 0.25); }
+  }
+
+  .chart-label { font-size: 9px; color: #627d98; display: block; margin-bottom: 6px; font-weight: bold; }
+  
+  .bar-container {
+    height: 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 3px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    .bar { height: 100%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .male-bar { background: #00ffcc; box-shadow: inset 0 0 8px rgba(0, 255, 204, 0.4); }
+    .female-bar { background: #ff007f; box-shadow: inset 0 0 8px rgba(255, 0, 127, 0.4); }
+    .field-bar { background: #ffb800; box-shadow: inset 0 0 8px rgba(255, 184, 0, 0.4); }
+    .geo-bar { background: #00f2ff; box-shadow: inset 0 0 8px rgba(0, 242, 255, 0.5); }
+  }
+
+  .chart-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    margin-top: 4px;
+    .m-color { color: #00ffcc; }
+    .f-color { color: #ff007f; }
+  }
+
+  .age-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    .age-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 6px;
+      border-radius: 4px;
+      text-align: center;
+      span { font-size: 9px; color: #627d98; display: block; }
+      strong { font-size: 12px; color: #fff; }
+    }
+  }
+
+  .geo-track-item {
+    background: rgba(0, 242, 255, 0.02);
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 242, 255, 0.05);
+  }
+
+  .console-divider { border: 0; height: 1px; background: rgba(255, 184, 0, 0.08); margin: 12px 0; }
+
+  .profession-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 11px;
+    .prof-name { color: #fff; font-weight: bold; }
+    .prof-pct { color: #ffb800; }
+  }
+
+  .raw-log-output {
+    margin: 0;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 1.4;
+    color: #a0aec0;
+    white-space: pre-wrap;
+    font-family: 'Consolas', monospace;
+  }
+
+  .mini-chart-placeholder {
+    &:hover {
+      background: rgba(0, 255, 204, 0.06) !important;
+      border-color: #00ffcc !important;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.15);
+    }
+  }
+
+  .maximize-btn {
+    background: rgba(255, 184, 0, 0.05);
+    border: 1px solid rgba(255, 184, 0, 0.2);
+    color: #ffb800;
+    font-family: monospace;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    &:hover {
+      background: rgba(255, 184, 0, 0.12);
+      border-color: #ffb800;
+      box-shadow: 0 0 6px rgba(255, 184, 0, 0.2);
+    }
+  }
+
+  .ai-report-wrapper {
+    &::-webkit-scrollbar { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: rgba(255, 184, 0, 0.3); }
+  }
+}
+
+// STILIZACIJA UNUTRAŠNJEG MODALA GRAFIKONA
+.forensic-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(2, 4, 8, 0.88); 
+  backdrop-filter: blur(10px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease-out;
+
+  .modal-mouse-shield {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1; 
+    pointer-events: auto !important; 
+    background: transparent;
+  }
+
+  .forensic-modal-window {
+    position: relative;
+    z-index: 2; 
+    width: 1100px;  
+    height: fit-content; 
+    background: #04080e;
+    border: 1px solid #ffb800; 
+    border-radius: 8px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 25px rgba(255, 184, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    overflow: visible !important; 
+  }
+
+  .modal-header {
+    background: rgba(255, 184, 0, 0.04);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 184, 0, 0.2);
+    h3 { margin: 0; font-size: 13px; font-weight: bold; color: #ffb800; letter-spacing: 1.5px; }
+  }
+
+  .matrix-dot-orange { width: 6px; height: 6px; background: #ffb800; border-radius: 50%; display: inline-block; margin-right: 8px; animation: blink 1s infinite alternate; }
+
+  .close-modal-btn {
+    background: rgba(255, 74, 74, 0.05);
+    border: 1px solid rgba(255, 74, 74, 0.4);
+    color: #ff4a4a;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover {
+      background: rgba(255, 74, 74, 0.15);
+      border-color: #ff4a4a;
+      box-shadow: 0 0 10px rgba(255, 74, 74, 0.4);
+    }
+  }
+
+  .modal-body {
+    padding: 24px;
+    display: flex;
+    gap: 24px;
+    overflow: visible !important; 
+  }
+
+  .modal-chart-section {
+    flex: 1.6; 
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 18px;
+    border-radius: 6px;
+    .modal-chart-header-text {
+      width: 100%;
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      .chart-label { margin: 0 !important; font-size: 11px !important; color: #ffffff !important; font-weight: bold !important; }
+    }
+    .modal-navigation-row {
+      width: 100%; margin-bottom: 16px; display: flex;
+      .console-nav {
+        display: flex; gap: 6px; width: 100%;
+        button {
+          @extend %cyber-btn-base;
+          flex: 1; padding: 6px 12px; font-size: 10px; border: 1px solid rgba(0, 242, 255, 0.15); color: #8fa0b5 !important;
+          &:hover { color: #fff !important; border-color: #00f2ff; background: rgba(0, 242, 255, 0.04); }
+          &.active { color: #00ffcc !important; background: rgba(0, 255, 204, 0.08); border-color: #00ffcc; text-shadow: 0 0 6px rgba(0, 255, 204, 0.4); }
+        }
+      }
+    }
+  }
+
+  .full-chart-container {
+    flex-grow: 1; display: flex; padding-top: 10px; overflow: visible !important;
+    apx-chart {
+      width: 100%; height: 480px !important; overflow: visible !important;
+      .apexcharts-canvas, svg { margin: 0 auto; height: 480px !important; overflow: visible !important; }
+      .apexcharts-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label { fill: #00f2ff !important; font-family: monospace !important; font-weight: bold !important; font-size: 11px !important; }
+      .apexcharts-xcrosshairs, .apexcharts-ycrosshairs { stroke: rgba(0, 242, 255, 0.4) !important; }
+      .apexcharts-gridline { stroke: rgba(255, 255, 255, 0.05) !important; }
+      .apexcharts-xaxis-title-text, .apexcharts-yaxis-title-text { fill: #ffb800 !important; font-family: monospace !important; font-size: 10px !important; font-weight: bold !important; }
+      .apexcharts-legend-text { color: #ffffff !important; font-family: monospace !important; font-size: 11px !important; }
+      .apexcharts-toolbar {
+        top: -45px !important; right: 5px !important; display: flex; gap: 6px;
+        svg { fill: #ffb800 !important; width: 16px !important; height: 16px !important; &:hover { fill: #00f2ff !important; } }
+        .apexcharts-selected { svg { fill: #00ffcc !important; } }
+      }
+    }
+  }
+
+  .modal-info-section {
+    flex: 1; display: flex; flex-direction: column; gap: 16px;
+    .chart-label { font-size: 10px !important; color: #ffffff !important; font-weight: bold !important; }
+  }
+
+  .modal-report-box {
+    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 184, 0, 0.2); padding: 16px; color: #ffffff; font-size: 13px; height: 390px; overflow-y: auto;
+    @extend %cyber-scroll;
+    &::-webkit-scrollbar-thumb { background: rgba(255, 184, 0, 0.3); }
+    p { margin: 0; &.blur-text { filter: blur(4px); opacity: 0.5; } }
+  }
+
+  .modal-quick-stats {
+    display: flex; flex-direction: column; gap: 8px;
+    .stat-node {
+      background: rgba(0, 242, 255, 0.03); border: 1px solid rgba(0, 242, 255, 0.15); padding: 10px 14px; display: flex; justify-content: space-between; font-size: 11px;
+      span { color: #a0aec0; font-weight: bold; } strong { color: #00ffcc; } 
+    }
+  }
+}
+.apexcharts-tooltip {
+    overflow: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    
+    // Ovaj transform uzima poziciju koju je JS sračunao i gura ceo tooltip naniže,
+    // što znači da će se na Channels tabu otvoriti bezbedno ISPOD tvog miša i unutar monitora!
+    transform: translateY(180px) !important; 
+  }
